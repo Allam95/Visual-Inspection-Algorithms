@@ -124,9 +124,7 @@ for fold_number, fold in enumerate(folders):
             split_image_name = image_name.split('_')
             image_number =split_image_name[3].split('.')[0]
 
-            #images_names_list.append(split_image_name[0])
-            #print('image name',image_name)
-            #print('image number',int(image_number))
+           
 
    
             filename = images_directory[index]
@@ -149,9 +147,7 @@ for fold_number, fold in enumerate(folders):
             mask = cv2.inRange(image, lower, upper)
             result = cv2.bitwise_and(result, result, mask=mask)
 
-            #cv2.imshow('mask', mask)
-            #cv2.imshow('result', result)
-            #cv2.waitKey(0)
+            
 
             contours, hierarchy = cv2.findContours(image=mask , mode = cv2.RETR_TREE,method = cv2.CHAIN_APPROX_NONE)[-2:]
 
@@ -171,21 +167,9 @@ for fold_number, fold in enumerate(folders):
                                 print('greater')    
                                 #plt.imshow(mask,cmap='binary')
                                 #plt.show()
-            # display result
-            #cv2.imshow("Mask", mask)
-            #print(mask)
-            #plt.imshow(img)
-            #plt.show()
-            #print('image shape',len(img))
-
-            #print('third channel',img[)
             
-            #print('black ='+black + 'red='+red) 
-            #print('count is', count)
             if [255] in mask :
-                #print('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh')
-                #print('imaaaaaaaaaaaaaaage number',int(image_number))
-                #print('grrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrounndd',ground_truth_array_gear)
+               
                 if int(image_number) in ground_truth_array_gear:
                     #print('yes')
                     #true_positives = true_positives + 1
@@ -194,17 +178,7 @@ for fold_number, fold in enumerate(folders):
                 else:
                     #false_positives = false_positives +1     
                     false_positives.append(int(image_number))
-                    #print('no')
-                
-                #print('count',img.count([0,0,255]))
-
-            # else:
-            #   print('no') 
-
-
-            #plt.imshow(img,cmap='gray')
-            #plt.title('image no.'+ str(image_number))
-            #plt.show()
+  
                 
     print('true_positives',len(true_positives))
     if len(true_positives) >=1:
