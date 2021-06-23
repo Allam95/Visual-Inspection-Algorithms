@@ -428,85 +428,9 @@ for test in test_images:
         #print(np.count_nonzero(false_positives_list==1))   
         return (pick_full_image,len(pick_full_image))
 
-    #unlabeled_histogram = unlabeledhistogram()
+    unlabeled_histogram = unlabeledhistogram()
 
-    def combinedclassification():
-        image_coordinates = np.empty((0,4), int) # 2x2
-        image_positives = np.empty((0,4), int)
-        boundingBoxes= np.empty((0,4), int)
-        boundingboxes_full_image = np.empty((0,4), int)
-        for j in height_patches:
-            #print('j',j)
-
-            for i in width_patches:
-                print('i',i)
-                unlabeled = gear [ j : j +50  , i : i+50 ] # 30x30 window
-                features_unlabeled_haralick= mahotas.features.haralick(unlabeled).mean(0)
-                features_unlabeled_histogram = cv2.calcHist([unlabeled],[0],None,[256],[0,256])
-                unlabeled = cv2.cvtColor(unlabeled,cv2.COLOR_BGR2GRAY)
-                #print(list(features_unlabeled))
-                #print('haralick is',list(features_unlabeled_haralick))
-                y = [int(yes) for yes in features_unlabeled_histogram]
-                #print('histogram i s',[y])
-                all_features = np.append(list(features_unlabeled_haralick),[y])
-                #print(len(all_features))
-                #print(all_features)
-
-                prediction = loaded_model.predict([all_features])
-                print(prediction)
-                false_positives_list.append(int(prediction))
-                if prediction == 1 :
-
-                    #plt.imshow(unlabeled,cmap='gray')
-                    #plt.show()
-                    inspect =cv2.rectangle(gear_copy, (i,j),(i+50,j+50), (0,255,0), 2) # 30x30 window
-                    #plt.imshow(inspect)
-                    #plt.show()
-                    image_coordinates = [i , j , i+50,j +50] # start x ,start y , end x, end y
-                    #image_coordinates_full_image = 160+center_y:150+center_y+115,center_x-240:center_x+300
-                    #image_coordinates_full_image = [i+ center_x-240,j+160+center_y,i+50+center_x+300,j+50+center_y+115]
-                    image_coordinates_full_image = [ i+ center_x-240,j+160+center_y,i+50+center_x-240,j+50+160+center_y] # commented this for now but important
-                    #image_coordinates_full_image = [i+50+center_x-240, j+160+center_y,i+50+center_x-240,j+50+160+center_y, i+ center_x-240,j+50+160+center_y, i+ center_x-240,j+160+center_y]
-                    boundingBoxes= np.vstack((boundingBoxes,image_coordinates))
-                    boundingboxes_full_image = np.vstack((boundingboxes_full_image,image_coordinates_full_image))
-                    print('image coordinates are ',image_coordinates)
-
-        print('bounding boxes are ',boundingBoxes)
-        print('number of boxes before non maximum',len(boundingBoxes))
-        for (startX, startY, endX, endY) in boundingBoxes:
-            cv2.rectangle(gear_copy, (startX, startY), (endX, endY), (0, 0, 255), 2)
-        # perform non-maximum suppression on the bounding boxes
-        pick = non_max_suppression_slow(boundingBoxes, 0.2) # tune this number
-        pick_full_image = non_max_suppression_slow(boundingboxes_full_image, 0.2) # tune this number
-         
-        print('bounding boxes are',pick)
-        print ("[x] after applying non-maximum, %d bounding boxes"% (len(pick)))
-        # loop over the picked bounding boxes and draw them
-        for (startX, startY, endX, endY) in pick:
-            cv2.rectangle(gear, (startX, startY), (endX, endY), (0, 255, 0), 2) # put it gear_copy if I need the new bounding bozes on the same image. Put it gear, if I want the boxes on new image.
-
-        # display the images
-        
-        #comment plots for now
-        #plt.imshow(gear,cmap='gray')
-        #plt.show()
-
-
-
-
-        #return false_positives_list
-        print(false_positives_list)
-        print('number of elements',len(false_positives_list))
-        print('number of ones',false_positives_list.count(1))
-        print('number of zeros',false_positives_list.count(0))
-        #plt.imshow(inspect)
-        #plt.show()      
-        #np.asarray(false_positives_list)
-        #print(np.count_nonzero(false_positives_list==1))   
-        return (pick_full_image,len(pick_full_image))
-
-
-    unlabeled_combined = combinedclassification()
+  
 
 
     def bb_intersection_over_union(boxA, boxB):
@@ -533,11 +457,11 @@ for test in test_images:
     #print(len(pick))
     print('defect boxes',boxes_defects_list)
     print('black lines boxes',boxes_blacklines_list)
-    boxes_defects_classifier_list = unlabeled_combined[0] # or unlabeled_histogram in case of histogram only
+    boxes_defects_classifier_list = unlabeled_histogram[0]
     print('classifier defects boxes',boxes_defects_classifier_list)
     #boxes_labels = 
-    print(int(unlabeled_combined[1])) #unlabeled_histogram in case of histogram only
-    detections = int(unlabeled_combined[1]) #unlabeled_histogram in case of histogram only
+    print(int(unlabeled_histogram[1])) 
+    detections = int(unlabeled_histogram[1]) 
 
 
     # but braek after these conditions
